@@ -1,0 +1,63 @@
+from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, DateTime
+from database_configuration import Base
+from sqlalchemy.dialects.postgresql import UUID
+import datetime
+import uuid
+
+from sqlalchemy.orm import relationship
+
+class Company(Base):
+    __tablename__="company"
+    id=Column(Integer, primary_key=True, autoincrement=True, index=True)
+    tenant_id=Column(UUID(as_uuid=True), default=uuid.uuid4, index=True, nullable=True)
+    company_name=Column(String, index=True, nullable=False, unique=True)
+    contact_email=Column(String, unique=True)
+    country=Column(String)
+    employees=relationship("Employee", back_populates="company")
+    users=relationship("Users", back_populates="company")
+
+class Employee(Base):
+    __tablename__="employee"
+    id=Column(Integer, primary_key=True, autoincrement=True, index=True)
+    employee_name=Column(String, unique=True, index=True)
+    description=Column(String(2000))
+    profile_pic=Column(String)
+    email=Column(String, unique=True, index=True)
+    charge=Column(String)
+    department=Column(String)
+    date_of_hire=Column(DateTime, default=datetime.datetime.utcnow)
+    company_id=Column(Integer, ForeignKey("company.id"))
+    company=relationship("Company", back_populates="employees")
+    personal_info=relationship("EmployeePersonalInfo",back_populates="employee")
+
+class EmployeePersonalInfo(Base):
+    __tablename__="employee_info"
+    id=Column(Integer, primary_key=True, autoincrement=True, index=True)
+    employee_id=Column(Integer,ForeignKey("employee.id"))
+    employee=relationship("Employee", back_populates="personal_info")
+    country=Column(String)
+    personal_number=Column(String)
+    city=Column(String)
+    current_address=Column(String)
+    date_of_birthday=Column(DateTime)
+    document_number=Column(Integer)
+    
+
+class Users(Base):
+    __tablename__="users"
+    id=Column(Integer, primary_key=True, autoincrement=True, index=True)
+    user_name=Column(String, index=True, unique=True, nullable=False)
+    password=Column(String, nullable=False)
+    email=Column(String, index=True, unique=True, nullable=False)
+    role_id=Column(Integer, ForeignKey("roles.id"))
+    role=relationship("UserRole", back_populates="users")
+    company_id=Column(Integer, ForeignKey("company.id"))
+    company=relationship("Company", back_populates="users")
+    
+
+class UserRole(Base):
+    __tablename__="roles"
+    id=Column(Integer, primary_key=True, autoincrement=True, index=True)
+    role_name=Column(String, unique=True, index=True)
+    users=relationship("Users", back_populates="role")
+
