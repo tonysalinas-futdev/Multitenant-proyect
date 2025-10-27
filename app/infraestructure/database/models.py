@@ -1,10 +1,21 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, DateTime
-from database_configuration import Base
+from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, DateTime,Enum
+from .database_configuration import Base
 from sqlalchemy.dialects.postgresql import UUID
 import datetime
 import uuid
-
 from sqlalchemy.orm import relationship
+from enum import Enum as EnumClass
+
+class Status(EnumClass):
+    ACTIVE="active"
+    ON_VACATION="on vacation"
+    INACTIVE="inactive"
+
+class UserRole(EnumClass):
+    ADMIN="admin"
+    MANAGER="manager"
+    VIEWER="viewer"
+
 
 class Company(Base):
     __tablename__="company"
@@ -29,6 +40,9 @@ class Employee(Base):
     company_id=Column(Integer, ForeignKey("company.id"))
     company=relationship("Company", back_populates="employees")
     personal_info=relationship("EmployeePersonalInfo",back_populates="employee")
+    status=Column(Enum(Status), index=True, default="active",nullable=False)
+
+
 
 class EmployeePersonalInfo(Base):
     __tablename__="employee_info"
@@ -49,15 +63,10 @@ class Users(Base):
     user_name=Column(String, index=True, unique=True, nullable=False)
     password=Column(String, nullable=False)
     email=Column(String, index=True, unique=True, nullable=False)
-    role_id=Column(Integer, ForeignKey("roles.id"))
-    role=relationship("UserRole", back_populates="users")
+
+    role=Column(Enum(UserRole), default="viewer", index=True)
     company_id=Column(Integer, ForeignKey("company.id"))
     company=relationship("Company", back_populates="users")
     
 
-class UserRole(Base):
-    __tablename__="roles"
-    id=Column(Integer, primary_key=True, autoincrement=True, index=True)
-    role_name=Column(String, unique=True, index=True)
-    users=relationship("Users", back_populates="role")
 
