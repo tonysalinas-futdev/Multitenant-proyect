@@ -8,8 +8,20 @@ class EmployeeInfo():
     date_of_birthday:datetime
     document_number:str
 
+    def __init__(self,country:str=None, city:str=None,personal_number:str=None, date_of_birthday:str=None,document_number:str=None, current_address=None):
+        self.city=city
+        self.country=country
+        self.current_address=current_address
+        self.document_number=document_number
+        self.date_of_birthday=date_of_birthday
+        self.personal_number=personal_number
+        
+
+
 class Employee():
-    def __init__(self, id:int , employee_name:str, description:str,  email:str,charge:str, department:str, company_id:int, status:Status,profile_pic:str=None):
+    def __init__(self, id:int , employee_name:str, description:str,  email:str,charge:str, department:str, company_id:int, status:Status,profile_pic:str=None,personal_info:EmployeeInfo=None):
+        if not isinstance(status,Status):
+            raise ValueError("El estado introducido no es válido")
         self.id=id
         self.employee_name=employee_name
         self.description=description
@@ -19,7 +31,7 @@ class Employee():
         self.department=department
         self.company_id=company_id
         self.status=status
-        self.personal_info=EmployeeInfo()
+        self.personal_info=personal_info
 
 
 

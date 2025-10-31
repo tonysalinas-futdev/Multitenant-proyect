@@ -6,12 +6,12 @@ import uuid
 from sqlalchemy.orm import relationship
 from enum import Enum as EnumClass
 
-class Status(EnumClass):
+class Status(str,EnumClass):
     ACTIVE="active"
     ON_VACATION="on vacation"
     INACTIVE="inactive"
 
-class UserRole(EnumClass):
+class UserRole(str,EnumClass):
     ADMIN="admin"
     MANAGER="manager"
     VIEWER="viewer"
@@ -30,10 +30,10 @@ class Company(Base):
 class Employee(Base):
     __tablename__="employee"
     id=Column(Integer, primary_key=True, autoincrement=True, index=True)
-    employee_name=Column(String, unique=True, index=True)
+    employee_name=Column(String, unique=True, index=True,nullable=False)
     description=Column(String(2000))
     profile_pic=Column(String)
-    email=Column(String, unique=True, index=True)
+    email=Column(String, unique=True, index=True,nullable=False)
     charge=Column(String)
     department=Column(String)
     date_of_hire=Column(DateTime, default=datetime.datetime.utcnow)
@@ -63,6 +63,7 @@ class Users(Base):
     user_name=Column(String, index=True, unique=True, nullable=False)
     password=Column(String, nullable=False)
     email=Column(String, index=True, unique=True, nullable=False)
+    created_at=Column(DateTime, default=datetime.datetime.now)
 
     role=Column(Enum(UserRole), default="viewer", index=True)
     company_id=Column(Integer, ForeignKey("company.id"))

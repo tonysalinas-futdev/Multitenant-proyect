@@ -21,7 +21,7 @@ def test_create_invalid_company(id, company_name, contact_email, country):
     with pytest.raises(ValueError):
         Company(id=id, company_name=company_name, contact_email=contact_email, country=country)
 
-def test_add_employee_to_company(return_company):
+def test_add_valid_employee_to_company(return_company):
     
     employee=Employee(1,"Pedro","Buen empleado","pedro@gmail.com","Senior Backend","No se",1,Status.ACTIVE)
     return_company.add_employee_to_company(employee)
@@ -30,6 +30,9 @@ def test_add_employee_to_company(return_company):
     assert return_company.employees[0]==employee
 
 def test_add_employee_to_company_failed(return_company):
+    """
+    Vamos a probar a añadir a un empleado cuyo nombre ya existe y luego lo mismo pero con el email
+    """
     employee=Employee(1,"Pedro García López","Buen empleado","pedro@gmail.com","Senior Backend","No se",1,Status.ACTIVE)
     
 
@@ -44,3 +47,11 @@ def test_add_employee_to_company_failed(return_company):
 
     with pytest.raises(ValueError,match="Ya existe un empleado registrado con ese correo o nombre"):
         return_company.add_employee_to_company(employee3)
+
+def test_change_employee_status(return_employee:Employee,return_company:Company):
+    return_company.change_employee_status(return_employee, Status.ON_VACATION)
+    assert return_employee.status==Status.ON_VACATION
+
+def test_change_employee_status_failed(return_employee:Employee,return_company:Company):
+    with pytest.raises(ValueError,match="El estado introducido no es válido"):
+        return_company.change_employee_status(return_employee,"inactive")

@@ -42,5 +42,7 @@ class Company():
             employee.personal_info=new_personal_info
                 
             
-    def change_employee_status(employee:Employee, new_status:Status):
+    def change_employee_status(self,employee:Employee, new_status:Status):
+        if not isinstance(new_status,Status):
+             raise ValueError("El estado introducido no es válido")
         employee.status=new_status
