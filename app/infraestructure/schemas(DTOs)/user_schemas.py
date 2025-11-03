@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field,  ConfigDict,EmailStr,field_validator, model_validator
-from app.infraestructure.database.models import Users, UserRole
+from app.core.domain.constants.constants import  UserRole
 from datetime import datetime
 from app.utils.validator import password_field_validator, validate_password
 

@@ -1,7 +1,7 @@
 from app.core.domain.entities.employee import Employee, EmployeeInfo
 from typing import List
 import uuid
-from app.infraestructure.database.models import Status
+from app.core.domain.constants.constants import Status
 from datetime import datetime
 from app.utils.validator import validate_email
 class Company():
@@ -44,5 +44,5 @@ class Company():
             
     def change_employee_status(self,employee:Employee, new_status:Status):
         if not isinstance(new_status,Status):
-             raise ValueError("El estado introducido no es válido")
+            raise ValueError("El estado introducido no es válido")
         employee.status=new_status

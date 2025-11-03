@@ -1,6 +1,7 @@
 import pytest
 from app.core.domain.entities.user import User
 from app.infraestructure.database.models import UserRole
+import re
 
 def test_valid_user_creation():
     user=User(1, user_name="Tony", password="Abcd1234#", email="email@example.com",role=UserRole.ADMIN, company_id=1)
@@ -28,3 +29,28 @@ def test_failed_user_creation(id, user_name, password, email, role, company_id):
 
     with pytest.raises(ValueError):
         User(id=id, user_name=user_name,password=password,email=email,role=role,company_id=company_id)
+
+
+def test_update_profile(return_test_user:User):
+    return_test_user.update_profile("Carlos Gonzalez","example222@gmail.com")
+    assert return_test_user.user_name=="Carlos Gonzalez"
+    assert return_test_user.email=="example222@gmail.com"
+
+@pytest.mark.parametrize("current_password, new_password",(
+        ["aS1234567657#","Abcd12345#"],
+        ["Abcd1234#","abcd12345#"],
+
+))
+def test_change_password_failed(new_password:str,current_password:str,return_test_user:User):
+    """En el primer caso vamos a probar a  ingresar mal la contraseña actual y en el segundo vamos a pasar una nueva contraseña que no cumple con los requisitos exigidios"""
+
+    if current_password=="aS1234567657#":
+        with pytest.raises(ValueError,match="Contraseña incorrecta"):
+            return_test_user.change_password(current_password,new_password)
+    else:
+        with pytest.raises(ValueError,match=re.escape("La contraseña debe contener al menos una letra mayúscula, una minúscula, un número y al menos un caracter especial entre !#.%$@")):
+            return_test_user.change_password(current_password,new_password)
+
+def test_change_password_succes(return_test_user:User):
+    return_test_user.change_password("Abcd1234#","Abcd123456789#")
+    assert return_test_user.password=="Abcd123456789#"

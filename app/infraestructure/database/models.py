@@ -4,18 +4,7 @@ from sqlalchemy.dialects.postgresql import UUID
 import datetime
 import uuid
 from sqlalchemy.orm import relationship
-from enum import Enum as EnumClass
-
-class Status(str,EnumClass):
-    ACTIVE="active"
-    ON_VACATION="on vacation"
-    INACTIVE="inactive"
-
-class UserRole(str,EnumClass):
-    ADMIN="admin"
-    MANAGER="manager"
-    VIEWER="viewer"
-
+from app.core.domain.constants.constants import Status, UserRole
 
 class Company(Base):
     __tablename__="company"

@@ -6,29 +6,22 @@ T=TypeVar("T")
 
 class GenericCRUDInterface(ABC, Generic[T]):
     @abstractmethod
-    def commit_(self)->None:
+    async def save(self, object:T)->None:
         pass
 
     @abstractmethod
-    def save(self, object:T)->None:
+    async def get_by_id(self, object_id:int)->T:
         pass
 
     @abstractmethod
-    def get_by_id(self, object_id:int)->T:
+    async def get_all_objects(self)->List[T]:
         pass
 
     @abstractmethod
-    def get_all_objects(self)->List[T]:
+    async def delete_object(self, object:T)->None:
         pass
 
     @abstractmethod
-    def delete_object(self, object:T)->None:
-        pass
-
-    @abstractmethod
-    def update(self, object:T, new_object:BaseModel)->T:
+    async def update(self, object:T, new_object:BaseModel)->None:
         pass
     
-    @abstractmethod
-    def rollback_(self)->None:
-        pass

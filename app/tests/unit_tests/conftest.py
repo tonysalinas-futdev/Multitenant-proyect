@@ -1,6 +1,7 @@
 from app.core.domain.entities.company import Company
 from app.core.domain.entities.employee import Employee, EmployeeInfo
-from app.infraestructure.database.models import Status
+from app.core.domain.entities.user import User
+from app.core.domain.constants.constants import Status, UserRole
 import pytest
 from faker import Faker
 import random
@@ -15,6 +16,9 @@ def return_employee():
 
     return Employee(1,"Tony Salinas","Muchacho de 21 años y mestizo","kroosismo0202@gmail.com","presidente","45",1,Status.ACTIVE,personal_info=info)
 
+@pytest.fixture
+def return_test_user():
+    return User(1,"Pedro Salinas","Abcd1234#","example@gmail.com",UserRole.ADMIN,1)
 
 
 @pytest.fixture

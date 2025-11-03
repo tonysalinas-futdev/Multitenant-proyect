@@ -1,5 +1,5 @@
 from app.utils.validator import validate_password, validate_email
-from app.infraestructure.database.models import UserRole
+from app.core.domain.constants.constants import  UserRole
 class User():
     def __init__(self, id, user_name:str, password:str, email:str, role:UserRole, company_id ):
         if not user_name or  id is None or not email or password is None:
@@ -25,7 +25,14 @@ class User():
                 and self.email==another_instance.email
                 and self.role==another_instance.role
                 and self.company_id==another_instance.company_id)
+    
+    def update_profile(self,new_username:str, new_email:str):
+        self.user_name=new_username
+        self.email=new_email
         
     
-     
-        
+    def change_password(self,current_password:str, new_password:str):
+        if current_password!=self.password:
+            raise ValueError("Contraseña incorrecta")
+        validate_password(new_password)
+        self.password=new_password

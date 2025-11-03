@@ -1,9 +1,9 @@
 from app.infraestructure.database.models import Users
 from abc import ABC, abstractmethod
 from typing import List
-from app.core.domain.repositories.generic_crud_interface import GenericCRUDInterface
+from app.core.application.repositories import GenericCRUDInterface
 
-class CompanyInterface(ABC,GenericCRUDInterface):
+class CompanyRepositoryInterface(ABC,GenericCRUDInterface):
     @abstractmethod
     async def get_by_company_name(self, company_name:str):
         pass

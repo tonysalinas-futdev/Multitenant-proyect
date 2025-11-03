@@ -1,7 +1,7 @@
 from pydantic import BaseModel,EmailStr,Field
 from typing import Optional
 from datetime import datetime
-from app.infraestructure.database.models import Status
+from app.core.domain.constants.constants import Status
 
 
 class EmployeeInfo(BaseModel):

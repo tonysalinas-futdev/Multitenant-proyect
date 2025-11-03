@@ -10,7 +10,7 @@ def test_create_valid_company():
 
 @pytest.mark.parametrize("id, company_name, contact_email, country ",
         ([1,None,"example@gmail.com","Cuba"],
-         [2,"Helados SA","@gmail.com","Canadá"]
+        [2,"Helados SA","@gmail.com","Canadá"]
 )
             )
 def test_create_invalid_company(id, company_name, contact_email, country):
