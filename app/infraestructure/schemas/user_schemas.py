@@ -45,7 +45,7 @@ class SignIn(BaseModel):
 
 class UpdateUser(BaseModel):
     user_name:Optional[str]=None
-    email=Optional[str]=None
+    email:Optional[EmailStr]=None
 
 
 class ForgotPassword(BaseModel):
@@ -54,7 +54,7 @@ class ForgotPassword(BaseModel):
 
 class UpdatePassword(ForgotPassword):
     
-    current_passwordstr=password_field_validator()
+    current_password:str=password_field_validator()
     @field_validator("new_password","current_password",mode="after")
     @classmethod
     def validate_password_field(cls, valor):

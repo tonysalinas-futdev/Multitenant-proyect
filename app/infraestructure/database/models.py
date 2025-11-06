@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, DateTime,Enum
+from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, DateTime,Enum,Float
 from .database_configuration import Base
 from sqlalchemy.dialects.postgresql import UUID
 import datetime
@@ -28,7 +28,8 @@ class Employee(Base):
     date_of_hire=Column(DateTime, default=datetime.datetime.utcnow)
     company_id=Column(Integer, ForeignKey("company.id"))
     company=relationship("Company", back_populates="employees")
-    personal_info=relationship("EmployeePersonalInfo",back_populates="employee")
+    personal_info=relationship("EmployeePersonalInfo",back_populates="employee",uselist=False)
+    salary=Column(Float)
     status=Column(Enum(Status), index=True, default="active",nullable=False)
 
 

@@ -3,7 +3,8 @@ from sqlalchemy import select
 from app.core.application.repositories.generic_crud_interface import GenericCRUDInterface
 from typing import TypeVar,Type,Generic,List
 from pydantic import BaseModel
-T=TypeVar("T")
+from sqlalchemy.orm import DeclarativeBase
+T=TypeVar("T", bound=DeclarativeBase)
 
 class SqlAlchemyGenericCrud(GenericCRUDInterface,Generic[T]):
     def __init__(self, session:AsyncSession, model:Type[T]):
@@ -19,10 +20,11 @@ class SqlAlchemyGenericCrud(GenericCRUDInterface,Generic[T]):
         query=select(self.model).where(self.model.id==object_id)
         result=await self.session.execute(query)
         object_=result.scalar_one_or_none()
-        return object_
+
+        return object_ 
     
-    async def get_all_objects(self)->List[T]:
-        query=select(self.model)
+    async def get_all_objects(self,limit=10, cursor=0)->List[T]:
+        query=select(self.model).where(self.model.id>cursor).order_by(self.model.id).limit(limit)
         result=await self.session.execute(query)
         objects=result.scalars().all()
         return objects
@@ -33,9 +35,11 @@ class SqlAlchemyGenericCrud(GenericCRUDInterface,Generic[T]):
         """
         new_object_attrs=new_object.model_dump(exclude_none=True)
         for attr, attr_value in new_object_attrs.items():
-            if hasattr(object,attr) :
+            if hasattr(object,attr):
                 setattr(object,attr,attr_value)
             
-                
+        await self.session.commit()
+        await self.session.refresh(object)
     async def delete_object(self, object:T)->None:
         await self.session.delete(object)
+        await self.session.commit()

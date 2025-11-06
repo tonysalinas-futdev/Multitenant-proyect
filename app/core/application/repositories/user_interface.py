@@ -1,9 +1,9 @@
 from app.infraestructure.database.models import Users
 from abc import ABC, abstractmethod
 from typing import List
-from app.core.application.repositories import GenericCRUDInterface
+from app.core.application.repositories.generic_crud_interface import GenericCRUDInterface
 
-class UserRepositoryInterface(ABC, GenericCRUDInterface):
+class UserRepositoryInterface(GenericCRUDInterface):
     @abstractmethod
     async def get_by_email(self,email:str)->Users:
         pass
