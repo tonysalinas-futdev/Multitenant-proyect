@@ -25,7 +25,7 @@ class Employee(Base):
     email=Column(String, unique=True, index=True,nullable=False)
     charge=Column(String)
     department=Column(String)
-    date_of_hire=Column(DateTime, default=datetime.datetime.utcnow)
+    date_of_hire=Column(DateTime, default=datetime.datetime.now)
     company_id=Column(Integer, ForeignKey("company.id"))
     company=relationship("Company", back_populates="employees")
     personal_info=relationship("EmployeePersonalInfo",back_populates="employee",uselist=False)
@@ -58,6 +58,16 @@ class Users(Base):
     role=Column(Enum(UserRole), default="viewer", index=True)
     company_id=Column(Integer, ForeignKey("company.id"))
     company=relationship("Company", back_populates="users")
+    refresh_tokens=relationship("RefreshToken",back_populates="user")
+
+class RefreshToken(Base):
+    __tablename__="refresh_tokens"
+    id=Column(Integer, primary_key=True, autoincrement=True)
+    token=Column(String, unique=True)
+    expires_at=Column(DateTime)
+    is_revoked=Column(Boolean, default=False)
+    user_id=Column(Integer, ForeignKey("users.id"))
+    user=relationship("Users",back_populates="refresh_tokens")
     
 
 

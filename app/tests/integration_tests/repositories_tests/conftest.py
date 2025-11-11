@@ -4,11 +4,13 @@ from sqlalchemy.orm import sessionmaker
 from app.infraestructure.database.models import Base,Users,Company,Employee,EmployeePersonalInfo
 from app.core.domain.constants.constants import UserRole
 from app.infraestructure.repositories.sqlalchemy_user_repo import SqlalchemyUserRepo
-from app.infraestructure.repositories.sqlalchemy_generic_crud import SqlAlchemyGenericCrud
 from app.infraestructure.repositories.sqlalchemy_company_repo import SqlalchemyCompanyRepo
 from app.infraestructure.repositories.sqlalchemy_employee_repo import SqlAlchemyEmployeeRepo
-from faker import Faker
-
+from app.infraestructure.database.models import RefreshToken
+from app.infraestructure.repositories.sqlalchemy_refresh_token_repo import SqlAlchemyRefreshTokenRepo
+import hashlib
+from uuid import uuid4
+from datetime import datetime , timedelta,timezone
 
 DATABASE_URL="sqlite+aiosqlite:///:memory:"
 engine=create_async_engine(DATABASE_URL)
@@ -40,6 +42,9 @@ async def get_company_repo(get_test_session):
 async def get_employee_repo(get_test_session):
     return SqlAlchemyEmployeeRepo(get_test_session)
 
+@pytest_asyncio.fixture
+async def get_refresh_token_repo(get_test_session):
+    return SqlAlchemyRefreshTokenRepo(get_test_session)
 
 @pytest_asyncio.fixture
 async def save_two_users(get_user_repo:SqlalchemyUserRepo):
@@ -109,3 +114,22 @@ async def save_employees_in_db(get_employee_repo:SqlAlchemyEmployeeRepo):
     lista_empleados=[employee1,employee2,employee3]
     for empl in lista_empleados:
         await get_employee_repo.save(empl)
+
+
+@pytest_asyncio.fixture
+async def save_two_tokens_in_bd(get_refresh_token_repo:SqlAlchemyRefreshTokenRepo):
+    expires_time=datetime.now(timezone.utc)+timedelta(minutes=15)
+    token1=RefreshToken(expires_at=expires_time,
+                        token=hashlib.sha256("12345abcd".encode()).hexdigest(),
+                        user_id=1
+                        
+                        )
+    
+    token2=RefreshToken(
+        expires_at=expires_time,
+        user_id=2,
+        token=hashlib.sha256("54321opqr".encode()).hexdigest()
+    )
+
+    await get_refresh_token_repo.save(token1)
+    await get_refresh_token_repo.save(token2)
