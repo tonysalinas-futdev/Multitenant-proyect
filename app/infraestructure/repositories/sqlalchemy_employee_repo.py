@@ -1,6 +1,6 @@
 from app.infraestructure.repositories.sqlalchemy_generic_crud import SqlAlchemyGenericCrud
 from app.core.application.repositories.employee_interface import EmployeeRepositoryInterface
-
+from app.core.domain.entities.employee import Employee as EmployeeEntity, EmployeeInfo
 from app.infraestructure.database.models import Employee
 from sqlalchemy import select, and_
 from sqlalchemy.orm import selectinload
@@ -11,9 +11,9 @@ def validate_salaries(min_salary:float,max_salary:float):
         raise ValueError("Ese valor no está permitido")
     if min_salary>max_salary:
         raise ValueError("El valor mínimo no puede ser mayor que el máximo")
-    
     return True
-        
+
+
 def return_min_salary_query(min_salary:float):
     return select(Employee).where(Employee.salary>min_salary)
 
@@ -61,6 +61,20 @@ class SqlAlchemyEmployeeRepo(EmployeeRepositoryInterface,SqlAlchemyGenericCrud):
         employees=result.scalars().all()
         return employees
 
-        
+    async def entity_to_model(self,employe_entity:EmployeeEntity):
+        employee=Employee(
+            employee_name=employe_entity.employee_name,
+            description=employe_entity.description,
+            email=employe_entity.email,
+            charge=employe_entity.charge,
+            department=employe_entity.department,
+            company_id=employe_entity.company_id,
+            profile_pic=employe_entity.profile_pic,
+            salary=employe_entity.salary,
+            status=employe_entity.status,
+            personal_info=employe_entity.personal_info
+
+        )
+        return employee
 
         

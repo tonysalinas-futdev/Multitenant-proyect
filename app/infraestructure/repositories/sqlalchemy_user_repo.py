@@ -1,6 +1,6 @@
 from app.infraestructure.repositories.sqlalchemy_generic_crud import SqlAlchemyGenericCrud
 from app.core.application.repositories.user_interface import UserRepositoryInterface
-
+from app.core.domain.entities.user import User ,UserRole
 from app.infraestructure.database.models import Users
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
@@ -32,4 +32,14 @@ class SqlalchemyUserRepo(UserRepositoryInterface,SqlAlchemyGenericCrud[Users]):
         result=await self.session.execute(query)
         user_object=result.scalar_one_or_none()
         return user_object
-        
+    
+    async def entity_to_model(self,user_entity:User)->Users:
+        user=Users(
+            user_name=user_entity.user_name,
+            password=user_entity.password,
+            email=user_entity.email,
+            role=user_entity.role,
+            company_id=user_entity.company_id,
+        )
+
+        return user

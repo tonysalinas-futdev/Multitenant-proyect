@@ -4,6 +4,7 @@ from app.core.application.repositories.refresh_token_interface import RefreshTok
 from app.infraestructure.database.models import RefreshToken
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
+from typing import List
 
 class SqlAlchemyRefreshTokenRepo(RefreshTokenInterface,SqlAlchemyGenericCrud):
     def __init__(self,session):
@@ -27,3 +28,7 @@ class SqlAlchemyRefreshTokenRepo(RefreshTokenInterface,SqlAlchemyGenericCrud):
         tokens=result.scalars().all()
         return tokens
     
+    async def delete_list_of_tokens(self,list_of_tokens:List[RefreshToken]):
+        for token in list_of_tokens:
+            await self.session.delete(token)
+        await self.session.commit()

@@ -12,6 +12,7 @@ class Company(Base):
     tenant_id=Column(UUID(as_uuid=True), default=uuid.uuid4, index=True, nullable=True)
     company_name=Column(String, index=True, nullable=False, unique=True)
     contact_email=Column(String, unique=True)
+    created_at=Column(DateTime,default=datetime.datetime.now)
     country=Column(String)
     employees=relationship("Employee", back_populates="company")
     users=relationship("Users", back_populates="company")

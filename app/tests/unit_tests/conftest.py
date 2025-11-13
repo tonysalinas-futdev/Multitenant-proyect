@@ -8,17 +8,17 @@ import random
 
 @pytest.fixture
 def return_company():
-    return Company(id=1, country="Cuba",contact_email="example@gmail.com", company_name="Helados SA")
+    return Company( country="Cuba",contact_email="example@gmail.com", company_name="Helados SA")
 
 @pytest.fixture
 def return_employee():
     info=EmployeeInfo(country="Cuba", city="La habana", personal_number="+53 52000748",current_address="Panchito Gómez", date_of_birthday="25/05/2004",document_number="12345678")
 
-    return Employee(1,"Tony Salinas","Muchacho de 21 años y mestizo","kroosismo0202@gmail.com","presidente","45",1,Status.ACTIVE,personal_info=info)
+    return Employee("Tony Salinas","Muchacho de 21 años y mestizo","kroosismo0202@gmail.com","presidente","45",1,Status.ACTIVE,personal_info=info)
 
 @pytest.fixture
 def return_test_user():
-    return User(1,"Pedro Salinas","Abcd1234#","example@gmail.com",UserRole.ADMIN,1)
+    return User("Pedro Salinas","Abcd1234#","example@gmail.com",UserRole.ADMIN,1)
 
 
 @pytest.fixture
@@ -35,7 +35,7 @@ def create_list_of_employees():
     
     employees_list=[
         Employee(
-            id=faker.random_number(),
+            
             employee_name=faker.name(),
             description=faker.text(),
             department=faker.word(),

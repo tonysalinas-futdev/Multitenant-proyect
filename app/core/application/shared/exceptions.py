@@ -1,8 +1,7 @@
 
 class DomainError(Exception):
-    def __init__(self, message:str, code:str=None):
+    def __init__(self, message:str):
         self.message=message
-        self.code=code
 
 class NotFoundError(DomainError):
     pass

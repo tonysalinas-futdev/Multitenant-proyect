@@ -1,7 +1,8 @@
 from app.utils.validator import validate_password, validate_email
 from app.core.domain.constants.constants import  UserRole
 class User():
-    def __init__(self, id, user_name:str, password:str, email:str, role:UserRole, company_id ):
+    id:int
+    def __init__(self, user_name:str, password:str, email:str, role:UserRole, company_id ):
         if not user_name or  id is None or not email or password is None:
             raise ValueError("Estos campos son obligatorios")
         if not isinstance(role, UserRole):
@@ -9,7 +10,6 @@ class User():
             
         validate_email(email)
         validate_password(password)
-        self.id=id
         self.user_name=user_name
         self.password=password
         self.email=email

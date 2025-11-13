@@ -1,5 +1,6 @@
 from app.infraestructure.repositories.sqlalchemy_generic_crud import SqlAlchemyGenericCrud
 from app.infraestructure.database.models import Company
+from app.core.domain.entities.company import Company as CompanyEntity
 from sqlalchemy import select
 from app.core.application.repositories.company_interface import CompanyRepositoryInterface
 from typing import List
@@ -29,3 +30,11 @@ class SqlalchemyCompanyRepo(CompanyRepositoryInterface,SqlAlchemyGenericCrud[Com
         company=result.scalar_one_or_none()
         return company
         
+    async def entity_to_model(self,company_entity:CompanyEntity):
+        company=Company(
+            company_name=company_entity.company_name,
+            contact_email=company_entity.contact_email,
+            country=company_entity.country
+        )
+
+        return company

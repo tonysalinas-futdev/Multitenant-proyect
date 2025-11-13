@@ -1,5 +1,6 @@
 from app.infraestructure.database.models import Users
 from app.core.domain.constants.constants import UserRole
+from app.core.domain.entities.user import User
 from app.infraestructure.repositories.sqlalchemy_user_repo import SqlalchemyUserRepo
 from app.infraestructure.schemas.user_schemas import UpdateUser
 import pytest
@@ -74,5 +75,23 @@ async def test_get_by_email(get_user_repo:SqlalchemyUserRepo,save_two_users):
 @pytest.mark.asyncio
 async def test_get_by_username(get_user_repo:SqlalchemyUserRepo,save_two_users):
     user=await get_user_repo.get_by_user_name("Pedro")
+    user2=await get_user_repo.get_by_user_name("Eduardo Camavinga")
 
     assert user.user_name=="Pedro"
+    assert user2 is None
+
+@pytest.mark.asyncio
+async def test_user_entity_to_email(get_user_repo:SqlalchemyUserRepo):
+    """
+    Vamos a testear que nueestra función para convertir de una entidad usuario a un modelo funciona correctamente y que además podemos guardar ese modelo y que al hacerlo, obtiene los campos faltantes (id, fecha de creación)
+    """
+
+    user=User(user_name="Juan Antonio Chao Salinas", password="Abcd12345#",email="example@gmail.com",role=UserRole.ADMIN,company_id=1)
+
+    model_user_instance=await get_user_repo.entity_to_model(user)
+    await get_user_repo.save(model_user_instance)
+
+    assert model_user_instance.id==1
+    assert model_user_instance.user_name=="Juan Antonio Chao Salinas"
+    assert model_user_instance.email=="example@gmail.com"
+    assert model_user_instance.created_at is not None

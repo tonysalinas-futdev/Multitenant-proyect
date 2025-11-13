@@ -24,4 +24,4 @@ class GenericCRUDInterface(ABC, Generic[T]):
     @abstractmethod
     async def update(self, object:T, new_object:BaseModel)->None:
         pass
-    
+

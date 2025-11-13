@@ -19,10 +19,11 @@ class EmployeeInfo():
 
 
 class Employee():
-    def __init__(self, id:int , employee_name:str, description:str,  email:str,charge:str, department:str, company_id:int, status:Status,profile_pic:str=None,personal_info:EmployeeInfo=None):
+    id:int
+    def __init__(self , employee_name:str, description:str,  email:str,charge:str, department:str, company_id:int, status:Status,profile_pic:str=None,personal_info:EmployeeInfo=None):
         if not isinstance(status,Status):
             raise ValueError("El estado introducido no es válido")
-        self.id=id
+        
         self.employee_name=employee_name
         self.description=description
         self.profile_pic=profile_pic

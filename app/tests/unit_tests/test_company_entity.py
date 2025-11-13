@@ -3,7 +3,7 @@ from app.core.domain.entities.company import Employee, EmployeeInfo
 import pytest
 from app.infraestructure.database.models import Status
 def test_create_valid_company():
-    company=Company(id=1, company_name="Helados SA", contact_email="example@gmail.com",country="Cuba")
+    company=Company( company_name="Helados SA", contact_email="example@gmail.com",country="Cuba")
 
     assert company.contact_email=="example@gmail.com"
     assert company.company_name=="Helados SA"
@@ -19,11 +19,11 @@ def test_create_invalid_company(id, company_name, contact_email, country):
     
     """
     with pytest.raises(ValueError):
-        Company(id=id, company_name=company_name, contact_email=contact_email, country=country)
+        Company( company_name=company_name, contact_email=contact_email, country=country)
 
 def test_add_valid_employee_to_company(return_company):
     
-    employee=Employee(1,"Pedro","Buen empleado","pedro@gmail.com","Senior Backend","No se",1,Status.ACTIVE)
+    employee=Employee("Pedro","Buen empleado","pedro@gmail.com","Senior Backend","No se",1,Status.ACTIVE)
     return_company.add_employee_to_company(employee)
 
     assert len(return_company.employees)==1
@@ -33,12 +33,12 @@ def test_add_employee_to_company_failed(return_company):
     """
     Vamos a probar a añadir a un empleado cuyo nombre ya existe y luego lo mismo pero con el email
     """
-    employee=Employee(1,"Pedro García López","Buen empleado","pedro@gmail.com","Senior Backend","No se",1,Status.ACTIVE)
+    employee=Employee("Pedro García López","Buen empleado","pedro@gmail.com","Senior Backend","No se",1,Status.ACTIVE)
     
 
-    employee2=Employee(1,"Pedro García López","Mal empleado","lopez@gmail.com","Senior Frontend","No tiene",1,Status.ACTIVE)
+    employee2=Employee("Pedro García López","Mal empleado","lopez@gmail.com","Senior Frontend","No tiene",1,Status.ACTIVE)
 
-    employee3=Employee(1,"Gonzalo Garcia Perez","Buen empleado","pedro@gmail.com","Senior DevOps","No tiene",1,Status.ACTIVE)
+    employee3=Employee("Gonzalo Garcia Perez","Buen empleado","pedro@gmail.com","Senior DevOps","No tiene",1,Status.ACTIVE)
 
     return_company.add_employee_to_company(employee)
     

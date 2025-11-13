@@ -11,11 +11,10 @@ class Company():
     contact_email:str
     country:str
     employees:List[Employee]
-    def __init__(self, id:int, company_name:str, contact_email:str, country:str):
+    def __init__(self, company_name:str, contact_email:str, country:str):
         if company_name is None or contact_email is None:
             raise ValueError("Debe introducir un nombre y un email para registrar su empresa")
         validate_email(contact_email)
-        self.id=id
         self.tenant_id=uuid.uuid4
         self.company_name=company_name
         self.contact_email=contact_email
